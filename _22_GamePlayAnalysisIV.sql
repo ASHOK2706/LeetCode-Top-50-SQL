@@ -23,3 +23,16 @@ values
     (2, 3, '2017-06-25', 1),
     (3, 1, '2016-03-02', 0),
     (3, 4, '2018-07-03', 5);
+
+-- Solution :
+
+select 
+    round(sum(login_player) / count(distinct player_id), 2) as fraction
+from 
+(
+    select 
+        player_id, 
+        datediff(event_date, min(event_date) over (partition by player_id)) = 1 as login_player
+    from activity1
+) as player_login_details;
+
