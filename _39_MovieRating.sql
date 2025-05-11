@@ -53,3 +53,46 @@ values
     (2, 3 , 2 , '2020-03-01' ),
     (3, 1 , 3 , '2020-02-22' ), 
     (3, 2 , 4 , '2020-02-25' );
+
+
+--  Solition :
+
+select results from (
+    select u.name as results
+    from users1 u
+    inner join movie_rating mr
+    on u.user_id = mr.user_id
+    group by u.user_id
+    order by count(mr.user_id) desc, u.name asc limit 1
+) as top_user
+union all
+select results from (
+    select m.title as results
+    from movies m
+    inner join movie_rating mr
+    on m.movie_id = mr.movie_id
+    where date_format(create_at, "%Y-%m") = '2020-02'
+    group by m.movie_id
+    order by avg(mr.rating) desc, m.title asc limit 1
+) as top_movie;
+
+
+/*
+select u.user_id, u.name, count(mr.user_id) as count
+from users1 u
+inner join movie_rating mr
+on u.user_id = mr.user_id
+group by u.user_id
+order by count desc, u.name asc;
+
+
+select m.movie_id, m.title, avg(mr.rating) as avg_rating
+from movies m
+inner join movie_rating mr
+on m.movie_id = mr.movie_id
+where date_format(create_at, "%Y-%m") = '2020-02'
+group by m.movie_id
+order by avg_rating desc, m.title asc;
+*/
+
+
